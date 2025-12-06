@@ -429,6 +429,7 @@
 <div class="w-full h-full overflow-y-auto flex items-center justify-center gap-96">
 	<div>
 		<h1 in:fade>Welcome to the Simple Mod Framework</h1>
+		<h2 in:fade>Patched by @imcalledfyre on youtube!</h2>
 		<br />
 		<div class="inline" in:fade={{ delay: 400 }}>
 			<Button kind="primary" icon={List} href="/modList" data-sveltekit-reload>Enable/disable mods</Button>
