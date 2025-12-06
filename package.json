@@ -64,8 +64,8 @@
     "compiled/**/*.node",
     "Mods/**/compiled/**/*.js",
     "Mods/**/compiled/**/*.node",
-    "Third-Party/rpkg-cli",          // add this
-    "Deploy.exe"                      // add this if Deploy spawns itself
+    "Third-Party/rpkg-cli",
+    "Deploy.exe"
   ],
   "targets": [
     "node20-win-x64"
