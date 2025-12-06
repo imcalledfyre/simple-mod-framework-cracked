@@ -1,9 +1,9 @@
-name: Release
-
 on:
   push:
+    branches:
+      - main       # runs on normal pushes to main
     tags:
-      - '*.*.*'
+      - '*.*.*'    # still runs on new tags
 
 jobs:
   build:
