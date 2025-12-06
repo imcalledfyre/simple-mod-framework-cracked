@@ -5,6 +5,10 @@ on:
     tags:
       - '*.*.*'    # still runs on new tags
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -15,9 +19,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20'
+          cache: 'npm'
 
       - uses: actions-rs/toolchain@v1
         with:
@@ -25,24 +30,24 @@ jobs:
           target: x86_64-pc-windows-msvc
           default: true
 
-      - name: Cache
+      - name: Cache root node_modules
         id: cache
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: buildCachev25
+          key: ${{ runner.os }}-root-node-${{ hashFiles('package-lock.json') }}
 
-      - name: Cache
+      - name: Cache Mod Manager node_modules
         id: cache2
         uses: actions/cache@v3
         with:
           path: Mod Manager/node_modules
-          key: buildCache2v20
+          key: ${{ runner.os }}-mod-manager-${{ hashFiles('Mod Manager/package-lock.json') }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          npm install
+          npm ci
 
       - name: Prep
         run: |
@@ -65,13 +70,13 @@ jobs:
           robocopy ./piscina ./node_modules/piscina /E /is /it; if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
           tsc
           copy ./src/smf-rust.node ./compiled/smf-rust.node
-          pkg package.json --targets node18-win-x64 --output Deploy.exe --compress Brotli
+          pkg package.json --targets node20-win-x64 --output Deploy.exe --compress Brotli
 
       - name: Install GUI dependencies
         if: steps.cache2.outputs.cache-hit != 'true'
         run: |
           cd "Mod Manager"
-          npm install
+          npm ci
           cd ../
 
       - name: Build GUI
@@ -93,7 +98,7 @@ jobs:
           robocopy ./compiled ./dist/API /E *.d.ts; if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
           robocopy ".\Mod Manager\dist\win-unpacked" "./dist/Mod Manager" /E; if ($lastexitcode -lt 8) { $global:LASTEXITCODE = $null }
           copy Deploy.exe dist
-          New-Item -Path dist -Name "Mod Manager.cmd" -ItemType "file" -Value "@echo off`ncd `"Mod Manager`"`nstart `"`" `"Mod Manager.exe`""
+          New-Item -Path dist -Name "Mod Manager.cmd" -ItemType "file" -Value "@echo off`ncd `"Mod Manager`"`nstart `"`" `" Mod Manager.exe`""
 
       - name: Zip
         uses: TheDoctor0/zip-release@4fb9e4ff72847dd3d1c111cf63834e353ed7cb3d
@@ -121,7 +126,7 @@ jobs:
           name: ${{ steps.latestTag.outputs.tag }}
           body: ${{ steps.changelog.outputs.changes }}
           tag_name: ${{ steps.latestTag.outputs.tag }}
-          repository: atampy25/simple-mod-framework
+          repository: imcalledfyre/simple-mod-framework-cracked
           files: dist/Release.zip
 
   sentry-release:
@@ -143,7 +148,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          npm install
+          npm ci
 
       - name: Compile TypeScript
         run: |
@@ -159,4 +164,4 @@ jobs:
         with:
           environment: production
           version: ${{ github.ref }}
-          sourcemaps: './compiled/core-singleton.js.map ./compiled/core.js.map ./compiled/crc32.js.map ./compiled/deploy.js.map ./compiled/difference.js.map ./compiled/discover.js.map ./compiled/main.js.map ./compiled/patchWorker.js.map ./compiled/quickentity-3.js.map ./compiled/quickentity-rs.js.map ./compiled/quickentity.js.map ./compiled/quickentity20.js.map ./compiled/quickentity1136.js.map ./compiled/rpkg.js.map ./compiled/three-onlymath.min.js.map ./compiled/types.js.map ./compiled/typescript.js.map ./compiled/utils.js.map'
+          sourcemaps: './compiled/core-singleton.js.map ./compiled/core.js.map ./compiled/crc32.js.map ./compiled/deploy.js.map ./compiled/difference.js.map ./compiled/discover.js.map ./compiled/[...]'
