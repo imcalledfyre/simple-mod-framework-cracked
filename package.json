@@ -54,19 +54,22 @@
   "bin": "compiled/main.js",
   "author": "Atampy26",
   "license": "LGPL-3.0-only",
-  "pkg": {
-    "scripts": [
-      "node_modules/piscina/dist/src/worker.js",
-      "compiled/patchWorker.js"
-    ],
-    "assets": [
-      "compiled/**/*.js",
-      "compiled/**/*.node",
-      "Mods/**/compiled/**/*.js",
-      "Mods/**/compiled/**/*.node"
-    ],
-    "targets": [
-      "node20-win-x64"
-    ]
-  }
+"pkg": {
+  "scripts": [
+    "node_modules/piscina/dist/src/worker.js",
+    "compiled/patchWorker.js"
+  ],
+  "assets": [
+    "compiled/**/*.js",
+    "compiled/**/*.node",
+    "Mods/**/compiled/**/*.js",
+    "Mods/**/compiled/**/*.node",
+    "Third-Party/rpkg-cli",          // add this
+    "Deploy.exe"                      // add this if Deploy spawns itself
+  ],
+  "targets": [
+    "node20-win-x64"
+  ]
+}
+
 }
